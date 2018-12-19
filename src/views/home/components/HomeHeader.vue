@@ -17,13 +17,14 @@ export default {
 .home-header {
   width: 100%;
   height: @headerHeight;
-  position: absolute;
+  position: fixed;
   left: 0;
   top: 0;
   background: @tColor;
   color: #fff;
   line-height: @headerHeight;
-  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, .3);
+  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, .4);
+  z-index: 2;
 
   .menu {
     font-family: "iconfont";

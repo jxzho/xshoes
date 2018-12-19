@@ -1,6 +1,7 @@
 <template>
   <div class="home">
     <HomeHeader></HomeHeader>
+    <HomeBody></HomeBody>
     <HomeFooter></HomeFooter>
   </div>
 </template>
@@ -9,6 +10,8 @@
 import axios from "axios";
 import HomeHeader from "./components/HomeHeader";
 import HomeFooter from "./components/HomeFooter";
+import HomeBody from "./components/home_body/HomeBody";
+
 axios.defaults.baseURL = "http://phalapix.cc:8000";
 
 export default {
@@ -19,14 +22,15 @@ export default {
   },
   components: {
     HomeHeader,
+    HomeBody,
     HomeFooter
   },
   mounted() {
     // 访问PHP的接口
-    axios.get("/?s=User.Login&username=zjx&password=123456")
+    /* axios.get("/?s=User.Login&username=zjx&password=123456")
       .then(data => {
         console.log(data);
-      });
+      }); */
   }
 };
 

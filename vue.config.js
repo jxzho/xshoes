@@ -4,7 +4,7 @@ const resolve = pathname => {
 };
 
 module.exports = {
-  baseUrl: "./",
+  baseUrl: "/",
   css: {
     loaderOptions: {
       stylus: {
@@ -14,18 +14,17 @@ module.exports = {
     }
   },
   pluginOptions: {
-    "cube-ui": {
-      postCompile: false,
-      theme: false
-    },
     "style-resources-loader": {
       preProcessor: "less",
-      patterns: [path.resolve(__dirname, "./src/assets/styles/theme.less")]
+      patterns: [
+        path.resolve(__dirname, "src/assets/styles/theme.less"),
+        path.resolve(__dirname, "src/assets/styles/mixins.less")
+      ]
     }
   },
   chainWebpack: config => {
     config.resolve.alias
-      .set("@$", resolve("src"))
+      .set("@", resolve("src"))
       .set("assets", resolve("src/assets"))
       .set("components", resolve("src/components"))
       .set("common", resolve("src/common"));

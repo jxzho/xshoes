@@ -40,11 +40,13 @@ export default {
   left: 0;
   bottom: 0;
   line-height: @footer-height;
+  background: #fff;
+  z-index: 2;
 
   .navigator {
     height: 100%;
     display: flex;
-    box-shadow: 0 -2px 12px 0 rgba(0, 0, 0, .1);
+    box-shadow: 0 -2px 12px 0 rgba(0, 0, 0, .3);
 
     .nav-item {
       flex: 1;
@@ -65,6 +67,10 @@ export default {
         line-height: 1;
       }
     }
+  }
+
+  & /deep/ .router-link-active {
+    color: royalblue;
   }
 }
 </style>
