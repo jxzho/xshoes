@@ -51,7 +51,7 @@ export default {
     padding: 10px 0;
     margin-top: .1rem;
 
-    .log, .reg {
+    .log, .reg, .vrf {
       .btnStyle();
     }
     .reg {

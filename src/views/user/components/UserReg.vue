@@ -3,20 +3,115 @@
     <section class="reg-area">
       <div class="input-area">
         <i class="icon">&#xe607;</i>
-        <input class="tel" type="text" placeholder="手机号码">
+        <input class="tel" 
+               type="text" 
+               placeholder="手机号码" 
+               @focus="handleTelFocus"
+               @blur="handleTelBlur"
+               v-model="input.tel">
       </div>
       <div class="input-area">
         <i class="icon">&#xe637;</i>
-        <input class="vrf" type="text" placeholder="验证码">
-        <a class="sendSMS" href="javascript:;">发送验证码</a>
+        <input class="vrf" 
+               type="text" 
+               :placeholder="codePlaceholder"
+               @focus="handleCodeFocus"
+               @blur="handleCodeBlur"
+               v-model="input.code">
+        <a class="sendSMS" 
+           href="javascript:;"
+           @click="handleSendSMS"
+           v-show="!showVerify">
+          发送验证码
+        </a>
       </div>
+      <div class="verify-area"
+           v-show="showVerify">
+        <a class="verifyBtn" 
+           href="javascript:;"
+           @click="handleVerifyClick">
+          注册
+        </a>
+      </div>
+      <van-number-keyboard
+        :show="showKeyboard"
+        close-button-text="完成"
+        @input="handleKeyboardInput"
+        @delete="handleKeyboardDelete"
+      />
     </section>
   </div>
 </template>
 
 <script>
+import { Toast } from 'vant';
+import axios from "axios";
+axios.defaults.withCredentials = true; // axios每次请求带上cookie
+
 export default {
-  name: "UserReg"
+  name: "UserReg",
+  data() {
+    return {
+      codePlaceholder: "验证码",
+      telFocus: false,
+      codeFocus: false,
+      showKeyboard: false,
+      showVerify: false,
+      input: {
+        tel: '',
+        code: ''
+      }
+    }
+  },
+  methods: {
+    handleSendSMS() {
+      axios
+        .get(`/user/sendCode?tel=${this.input.tel}`)
+        .then(res => {
+          const data = res.data;
+          Toast(data.message);
+          this.input.code = res.data.data.code;
+          data.status === 1 && (this.showVerify = true);
+        });
+    },
+    handleVerifyClick() {
+      axios
+        .get(`/user/verify?tel=${this.input.tel}&code=${this.input.code}`)
+        .then(res => {
+          console.log(res);
+          const data = res.data;
+          Toast(data.message);
+        });
+    },
+    handleKeyboardInput(value) {
+      this.telFocus && (
+        this.input.tel = (this.input.tel += value).slice(0, 11)
+      );
+      this.codeFocus && (
+        this.input.code = (this.input.code += value).slice(0, 6)
+      );
+    },
+    handleKeyboardDelete() {
+      // ...
+    },
+    handleTelFocus() {
+      this.telFocus = this.showKeyboard = true;
+    },
+    handleTelBlur() {
+      this.telFocus = this.showKeyboard = false;
+    },
+    handleCodeFocus() {
+      this.codePlaceholder = "6位验证码";
+      this.codeFocus = this.showKeyboard = true;
+    },
+    handleCodeBlur() {
+      this.codePlaceholder = "验证码";
+      this.codeFocus = this.showKeyboard = false;
+    }
+  },
+  computed: {
+    
+  }
 }
 </script>
 
@@ -56,9 +151,13 @@ export default {
         padding: .1rem .15rem;
         font-size: .18rem;
         line-height: .18rem;
+        text-shadow: 0 0 2px rgba(0, 0, 255, .2);
       }
       .tel {
         flex: 1;
+      }
+      .vrf {
+        color: rgb(65, 65, 235);
       }
 
       .sendSMS {
@@ -68,6 +167,15 @@ export default {
       }
 
     }
+
+    .verify-area {
+      display: flex;
+      justify-content: center;
+      .verifyBtn {
+        .btnStyle();
+        line-height: 1.3;
+      }
+    } 
   }
 }
 </style>

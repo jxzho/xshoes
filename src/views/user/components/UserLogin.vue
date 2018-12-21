@@ -9,6 +9,11 @@
         <i class="icon">&#xe64a;</i>
         <input class="psw" type="password" v-model="input.password" placeholder="密码">
       </div>
+      <div class="input-area">
+        <i class="icon">&#xe637;</i>
+        <input class="vrf" type="text" placeholder="验证码">
+        <a class="sendSMS" href="javascript:;">发送验证码</a>
+      </div>
     </section>
     <div class="control">
       <a class="log" @click="handleLoginClick">登陆</a>
@@ -62,6 +67,7 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
+      position: relative;
 
       .icon {
         font-family: 'iconfont';
@@ -69,7 +75,7 @@ export default {
         line-height: .2rem;
       }
 
-      .usn, .psw {
+      .usn, .psw, .vrf {
         display: block;
         width: 2.8rem;
         box-sizing: border-box;
@@ -77,16 +83,24 @@ export default {
         font-size: .18rem;
         line-height: .18rem;
       }
+
+      .sendSMS {
+        .btnStyle();
+        position: absolute;
+        right: 0;
+      }
     }
   }
   
   .control {
     margin: .2rem 0;
+    text-align: center;
     display: flex;
     justify-content: space-around;
-    .log, .reg {
+
+    .log, .reg, {
       .btnStyle();
-      box-shadow: 0 0 15px rgba(0, 0, 0, .25);
+      line-height: 1.5;
     }
     .reg {
       background: @xRed;
