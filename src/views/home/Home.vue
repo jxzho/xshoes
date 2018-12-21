@@ -12,7 +12,7 @@ import HomeHeader from "./components/HomeHeader";
 import HomeFooter from "./components/HomeFooter";
 import HomeBody from "./components/home_body/HomeBody";
 
-axios.defaults.baseURL = "http://phalapix.cc:8000";
+axios.defaults.baseURL = "http://xshoes.cn:8000";
 
 export default {
   name: "Home",
@@ -26,11 +26,6 @@ export default {
     HomeFooter
   },
   mounted() {
-    // 访问PHP的接口
-    /* axios.get("/?s=User.Login&username=zjx&password=123456")
-      .then(data => {
-        console.log(data);
-      }); */
   }
 };
 
