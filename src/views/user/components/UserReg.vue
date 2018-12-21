@@ -69,6 +69,7 @@ export default {
         .get(`/user/sendCode?tel=${this.input.tel}`)
         .then(res => {
           const data = res.data;
+          // console.log(data);
           Toast(data.message);
           this.input.code = res.data.data.code;
           data.status === 1 && (this.showVerify = true);
@@ -78,8 +79,8 @@ export default {
       axios
         .get(`/user/verify?tel=${this.input.tel}&code=${this.input.code}`)
         .then(res => {
-          console.log(res);
           const data = res.data;
+          // console.log(data);
           Toast(data.message);
         });
     },
