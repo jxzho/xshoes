@@ -17,9 +17,11 @@ export default {
 
 <style lang="less" scoped>
   .user-item {
+    width: 3.5rem;
     padding: .2rem 0;
-    margin-top: .1rem;
+    margin: .1rem auto 0 auto;
     background: #fff;
+    border-radius: 4px;
     box-shadow: 0 0 12px rgba(0, 0, 0, .2);
 
     .contents {

@@ -1,17 +1,20 @@
 <template>
   <section class="user-header border-bottom">
     <div class="avatar">
-      <i>&#xe620;</i>
+      <img v-if="isLogin"
+           :src="user.avatar">
     </div>
-    <div class="action-area">
+    <div class="action-area" v-if="!isLogin">
       <a class="log" href="javascript:;" @click="handleGoLog">登陆</a>
       <a class="reg" href="javascript:;" @click="handleGoReg">注册</a>
     </div>
-    <footer class="pint">未登录</footer>
+    <footer class="pint">{{userId}}</footer>
   </section>
 </template>
 
 <script>
+import { mapState, mapGetters } from "vuex";
+
 export default {
   name: "UserHeader",
   data() {
@@ -25,11 +28,19 @@ export default {
     handleGoReg() {
       this.$emit('show-reg-event');
     }
+  },
+  computed: {
+    ...mapState(['user']),
+    ...mapGetters(['isLogin']),
+    userId() {
+      return this.isLogin ? ('id: xs-hvagd-' + this.user.id) : '未登录';
+    }
   }
 }
 </script>
 
 <style lang="less" scoped>
+@avatarLen: .8rem;
 .user-header {
   width: 3.5rem;
   margin: 0 auto;
@@ -40,6 +51,17 @@ export default {
   background: #fff;
 
   .avatar {
+    width: @avatarLen;
+    height: @avatarLen;
+    border-radius: unit(@avatarLen / 2, rem);
+    overflow: hidden;
+    box-shadow: 1px 3px 8px rgba(0, 0, 0, .2);
+    margin: 0 auto .15rem auto;
+    background: url('~assets/image/user.svg') no-repeat center center / 100% 100%;
+
+    img {
+      width: 100%;
+    }
     i {
       font-family: "iconfont";
       font-size: .8rem;
@@ -59,12 +81,14 @@ export default {
     }
 
     & a:nth-child(1) {
-      margin-right: 5px;
+      margin-right: .2rem;
     }
   }
 
   .pint {
     margin-top: .1rem;
+    color: #000;
+    font-size: .15rem;
   }
 }
 </style>

@@ -45,8 +45,7 @@
 
 <script>
 import { Toast } from 'vant';
-import axios from "axios";
-axios.defaults.withCredentials = true; // axios每次请求带上cookie
+import api from "@/api";
 
 export default {
   name: "UserReg",
@@ -65,9 +64,7 @@ export default {
   },
   methods: {
     handleSendSMS() {
-      axios
-        .get(`/user/sendCode?tel=${this.input.tel}`)
-        .then(res => {
+      api.sendCode(this.input.tel).then(res => {
           const data = res.data;
           // console.log(data);
           Toast(data.message);
@@ -76,13 +73,15 @@ export default {
         });
     },
     handleVerifyClick() {
-      axios
-        .get(`/user/verify?tel=${this.input.tel}&code=${this.input.code}`)
-        .then(res => {
-          const data = res.data;
-          // console.log(data);
-          Toast(data.message);
-        });
+      api.verifyCode(this.input.tel, this.input.code)
+          .then(res => {
+            const data = res.data;
+            Toast(data.message + ', 已为您自动登陆');
+            if (data.status === 1) {
+              this.$store.commit('userLogin', data.data.user);
+              this.$router.push('/');
+            }
+          });
     },
     handleKeyboardInput(value) {
       this.telFocus && (

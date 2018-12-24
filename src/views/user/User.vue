@@ -3,7 +3,8 @@
     <HeaderNav :navOptions="navOptions" key="HeaderNav"></HeaderNav>
     <section class="user-action">
       <transition>
-        <UserHeader v-show="showHeader" 
+        <UserHeader
+          v-show="showHeader" 
           @show-login-event="handleShowLogin"
           @show-reg-event="handleShowReg">
         </UserHeader>
@@ -16,7 +17,7 @@
         <UserReg v-show="showReg"></UserReg>
       </transition>
     </section>
-    <UserItem v-if="false" key="UserItem"></UserItem>
+    <UserItem v-if="isLogin" key="UserItem"></UserItem>
   </div>
 </template>
 
@@ -26,6 +27,7 @@ import UserHeader from "./components/UserHeader";
 import UserLogin from "./components/UserLogin";
 import UserReg from "./components/UserReg";
 import UserItem from "./components/UserItem";
+import { mapState, mapGetters } from "vuex";
 
 export default {
   name: "User",
@@ -47,6 +49,8 @@ export default {
     }
   },
   computed: {
+    ...mapState(['user']),
+    ...mapGetters(['isLogin']),
     navOptions() {
       let op = { title: '' };
       this.showHeader && (op.title = 'USER');

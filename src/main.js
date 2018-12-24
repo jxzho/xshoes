@@ -1,6 +1,7 @@
 import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
+import store from "./store/";
 import VueAwesomeSweiper from "vue-awesome-swiper";
 import Vant from "vant"; // vant
 
@@ -15,6 +16,7 @@ Vue.use(VueAwesomeSweiper);
 Vue.use(Vant);
 
 new Vue({
+  store,
   router,
   render: h => h(App)
 }).$mount("#app");

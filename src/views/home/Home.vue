@@ -11,6 +11,7 @@ import axios from "axios";
 import HomeHeader from "./components/HomeHeader";
 import HomeFooter from "./components/HomeFooter";
 import HomeBody from "./components/home_body/HomeBody";
+import { mapState } from "vuex";
 
 axios.defaults.baseURL = "http://xshoes.cn:8000";
 
@@ -25,7 +26,11 @@ export default {
     HomeBody,
     HomeFooter
   },
+  computed: {
+    ...mapState(['user'])
+  },
   mounted() {
+    // console.log(this.user);
   }
 };
 

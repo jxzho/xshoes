@@ -11,8 +11,8 @@
       </div>
       <div class="input-area">
         <i class="icon">&#xe637;</i>
-        <input class="vrf" type="text" placeholder="验证码">
-        <a class="sendSMS" href="javascript:;">发送验证码</a>
+        <input class="vrf" type="text" placeholder="验证码" v-model="input.code">
+        <a class="sendSMS" href="javascript:;" @click="handleSendSMS">发送验证码</a>
       </div>
     </section>
     <div class="control">
@@ -23,6 +23,8 @@
 </template>
 
 <script>
+import api from "@/api";
+
 export default {
   name: "Login",
   data() {
@@ -32,11 +34,17 @@ export default {
       },
       input: {
         username: '',
-        password: ''
+        password: '',
+        code: ''
       }
     }
   },
   methods: {
+    handleSendSMS() {
+      api.sendCode(this.code).then(res => {
+        console.log(res);
+      });
+    },
     handleLoginClick() {
       // console.log(this.input.username, this.input.password);
     },
