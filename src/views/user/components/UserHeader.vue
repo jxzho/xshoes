@@ -9,11 +9,13 @@
       <a class="reg" href="javascript:;" @click="handleGoReg">注册</a>
     </div>
     <footer class="pint">{{userId}}</footer>
+    <UserItem v-if="isLogin" key="UserItem"></UserItem>
   </section>
 </template>
 
 <script>
 import { mapState, mapGetters } from "vuex";
+import UserItem from "./UserItem";
 
 export default {
   name: "UserHeader",
@@ -35,6 +37,9 @@ export default {
     userId() {
       return this.isLogin ? ('id: xs-hvagd-' + this.user.id) : '未登录';
     }
+  },
+  components: {
+    UserItem
   }
 }
 </script>
@@ -42,6 +47,8 @@ export default {
 <style lang="less" scoped>
 @avatarLen: .8rem;
 .user-header {
+  position: absolute;
+  top: 0; left: 0; right: 0;
   width: 3.5rem;
   margin: 0 auto;
   border-radius: 4px;

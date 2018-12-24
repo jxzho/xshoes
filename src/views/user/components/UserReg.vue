@@ -18,11 +18,11 @@
                @focus="handleCodeFocus"
                @blur="handleCodeBlur"
                v-model="input.code">
-        <a class="sendSMS" 
+        <a :class="['sendSMS', { diabled: isSendCode }]" 
            href="javascript:;"
            @click="handleSendSMS"
            v-show="!showVerify">
-          发送验证码
+          {{sendCodeMsg}}
         </a>
       </div>
       <div class="verify-area"
@@ -56,6 +56,9 @@ export default {
       codeFocus: false,
       showKeyboard: false,
       showVerify: false,
+      codeInterval: 60,
+      timer: '',
+      isSendCode: false,
       input: {
         tel: '',
         code: ''
@@ -64,6 +67,21 @@ export default {
   },
   methods: {
     handleSendSMS() {
+      if (this.isSendCode) return;
+
+      const defaultInterval = this.codeInterval;
+      this.timer = setInterval(() => {
+        this.codeInterval--;
+        if (this.codeInterval < 0) {
+           clearInterval(this.timer);
+           this.timer = '';
+           this.isSendCode = false;
+           this.codeInterval = defaultInterval;
+          return;
+        }
+      }, 1000);
+      
+      this.isSendCode = true;
       api.sendCode(this.input.tel).then(res => {
           const data = res.data;
           // console.log(data);
@@ -110,7 +128,13 @@ export default {
     }
   },
   computed: {
-    
+    sendCodeMsg() {
+      let msg = (this.isSendCode && this.codeInterval >= 0)
+        ? (this.codeInterval + 's后重新发送')
+        : '发送验证码';
+
+      return msg;
+    }
   }
 }
 </script>
@@ -118,15 +142,14 @@ export default {
 <style lang="less" scoped>
 .user-reg {
   position: absolute;
-  top: 0;
+  top: 0; left: 0; right: 0;
   background: #fff;
   border-radius: 4px;
-  .flex-column();
+  width: 3.5rem;
+  margin: 0 auto;
 
   .reg-area {
     .flex-column();
-    width: 3.5rem;
-    margin: 0 auto;
     padding: .1rem .2rem;
     box-shadow: 0 0 8px rgba(0, 0, 0, .3);
     border-radius: 4px;
@@ -164,6 +187,10 @@ export default {
         .btnStyle();
         position: absolute;
         right: 0;
+      }
+
+      .diabled {
+        background: @xRed;
       }
 
     }

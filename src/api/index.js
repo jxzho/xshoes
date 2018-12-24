@@ -1,4 +1,5 @@
 import axios from "axios";
+axios.defaults.baseURL = "http://xshoes.cn:8000";
 axios.defaults.withCredentials = true; // axios每次请求带上cookie
 
 export default {

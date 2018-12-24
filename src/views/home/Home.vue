@@ -13,8 +13,6 @@ import HomeFooter from "./components/HomeFooter";
 import HomeBody from "./components/home_body/HomeBody";
 import { mapState } from "vuex";
 
-axios.defaults.baseURL = "http://xshoes.cn:8000";
-
 export default {
   name: "Home",
   data() {

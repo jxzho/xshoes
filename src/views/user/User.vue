@@ -1,6 +1,7 @@
 <template>
   <div class="user">
-    <HeaderNav :navOptions="navOptions" key="HeaderNav"></HeaderNav>
+    <HeaderNav :navOptions="navOptions"
+               key="HeaderNav"></HeaderNav>
     <section class="user-action">
       <transition>
         <UserHeader
@@ -17,7 +18,6 @@
         <UserReg v-show="showReg"></UserReg>
       </transition>
     </section>
-    <UserItem v-if="isLogin" key="UserItem"></UserItem>
   </div>
 </template>
 
@@ -26,7 +26,6 @@ import HeaderNav from "common/HeaderNav";
 import UserHeader from "./components/UserHeader";
 import UserLogin from "./components/UserLogin";
 import UserReg from "./components/UserReg";
-import UserItem from "./components/UserItem";
 import { mapState, mapGetters } from "vuex";
 
 export default {
@@ -35,7 +34,8 @@ export default {
     return {
       showHeader: true,
       showLogin: false,
-      showReg: false
+      showReg: false,
+      showCode: false
     }
   },
   methods: {
@@ -56,6 +56,7 @@ export default {
       this.showHeader && (op.title = 'USER');
       this.showLogin && (op.title = 'LOGIN');
       this.showReg && (op.title = 'REG');
+      op.showMenu = this.isLogin;
 
       return op;
     }
@@ -64,8 +65,7 @@ export default {
     HeaderNav,
     UserHeader,
     UserLogin,
-    UserReg,
-    UserItem
+    UserReg
   }
 }
 </script>
@@ -79,14 +79,14 @@ export default {
 
   .user-action {
     margin-top: .1rem;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    position: absolute;
+    top: .45rem;
+    left: 0; right: 0; bottom: 0;
   }
 }
 
 .v-enter, .v-leave-to {
+  opacity: 0;
   transform: translateX(-100%);
 }
 

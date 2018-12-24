@@ -2,7 +2,7 @@
   <header class="navigator">
     <i class="backBtn" @click="handleBackBtn">&#xe604;</i>
     <span class="title">{{navOptions.title}}</span>
-    <i class="menu" @click="handleMenuClick">&#xe6ac;</i>
+    <i class="menu" @click="handleMenuClick" v-show="navOptions.showMenu">&#xe6ac;</i>
     <aside class="menu-panel">
       <van-actionsheet
         v-model="showMenu"
@@ -18,6 +18,9 @@ import { Actionsheet, Toast } from 'vant';
 
 export default {
   name: "HeaderNav",
+  props: {
+    navOptions: Object
+  },
   data() {
     return {
       menuActions: [
@@ -31,9 +34,6 @@ export default {
       ],
       showMenu: false
     }
-  },
-  props: {
-    navOptions: Object
   },
   methods: {
     handleBackBtn() {
@@ -65,12 +65,16 @@ export default {
 
 <style lang="less" scoped>
   .navigator {
+    width: 100%;
     background: @tColor;
     height: .45rem;
     line-height: .45rem;
     text-align: center;
     color: #fff;
-    position: relative;
+    position: fixed;
+    top: 0; left: 0;
+    z-index: 2;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .3);
 
     .backBtn {
       position: absolute;
