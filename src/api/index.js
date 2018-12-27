@@ -8,5 +8,11 @@ export default {
   },
   verifyCode(tel, code) {
     return axios.get(`/user/verify?tel=${tel}&code=${code}`);
+  },
+  login(username, password) {
+    return axios.post(`/user/login`, {
+      username,
+      password
+    });
   }
 };

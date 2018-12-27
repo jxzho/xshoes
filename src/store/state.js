@@ -9,5 +9,6 @@ try {
 }
 
 export default {
-  user: userInfo
+  user: userInfo,
+  cart: []
 };

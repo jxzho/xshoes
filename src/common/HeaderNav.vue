@@ -74,7 +74,7 @@ export default {
     position: fixed;
     top: 0; left: 0;
     z-index: 2;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, .3);
+    // box-shadow: 0 4px 10px rgba(0, 0, 0, .3);
 
     .backBtn {
       position: absolute;

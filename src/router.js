@@ -5,39 +5,40 @@ import Classify from "./views/classify/Classify.vue";
 import Stroll from "./views/stroll/Stoll.vue";
 import Cart from "./views/cart/Cart.vue";
 import User from "./views/user/User.vue";
+import Item from "./common/Item.vue"
 
 Vue.use(Router);
 
 export default new Router({
   routes: [
     {
-      path: "/",
-      name: "Home",
-      component: Home
-    },
-    {
-      path: "/classify",
       name: "Classify",
+      path: "/classify",
       component: Classify
     },
     {
-      path: "/stroll",
       name: "Stroll",
+      path: "/stroll",
       component: Stroll
     },
     {
-      path: "/cart",
       name: "Cart",
+      path: "/cart",
       component: Cart
     },
     {
-      path: "/user",
       name: "User",
+      path: "/user",
       component: User
     },
     {
-      path: "*",
-      name: "*",
+      name: "Shoes",
+      path: "/shoes/:id",
+      component: Item
+    },
+    {
+      name: "Home",
+      path: "/",
       component: Home
     }
   ]

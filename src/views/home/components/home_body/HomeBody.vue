@@ -19,18 +19,13 @@ import BScroll from 'better-scroll';
 
 export default {
   name: "HomeBody",
-  components: {
-    HomeBDSwiper,
-    HomeBDClassify,
-    HomeBDDiscount,
-    BScroll
-  },
   methods: {
     bscrollInit() {
       this.$nextTick(() => {
         if (!this.scroll) {
           const wrapper = this.$refs.wrapper;
           this.scroll = new BScroll(wrapper, {
+            scrollbar: true,
             pullDownRefresh: {
               threshold: 50,
               stop: 30
@@ -63,8 +58,16 @@ export default {
     }
   },
   mounted() {
-    this.bscrollInit();
-  }
+    this.$nextTick(() => {
+      this.bscrollInit();
+    });
+  },
+  components: {
+    HomeBDSwiper,
+    HomeBDClassify,
+    HomeBDDiscount,
+    BScroll
+  },
 }
 </script>
 

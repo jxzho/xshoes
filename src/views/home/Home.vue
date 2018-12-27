@@ -2,15 +2,15 @@
   <div class="home">
     <HomeHeader></HomeHeader>
     <HomeBody></HomeBody>
-    <HomeFooter></HomeFooter>
+    <FooterNav></FooterNav>
   </div>
 </template>
 
 <script>
 import axios from "axios";
 import HomeHeader from "./components/HomeHeader";
-import HomeFooter from "./components/HomeFooter";
 import HomeBody from "./components/home_body/HomeBody";
+import FooterNav from "common/FooterNav";
 import { mapState } from "vuex";
 
 export default {
@@ -22,7 +22,7 @@ export default {
   components: {
     HomeHeader,
     HomeBody,
-    HomeFooter
+    FooterNav
   },
   computed: {
     ...mapState(['user'])

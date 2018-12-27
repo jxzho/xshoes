@@ -9,11 +9,11 @@
         <i class="icon">&#xe64a;</i>
         <input class="psw" type="password" v-model="input.password" placeholder="密码">
       </div>
-      <div class="input-area">
+      <!-- <div class="input-area">
         <i class="icon">&#xe637;</i>
         <input class="vrf" type="text" placeholder="验证码" v-model="input.code">
         <a class="sendSMS" href="javascript:;" @click="handleSendSMS">发送验证码</a>
-      </div>
+      </div> -->
     </section>
     <div class="control">
       <a class="log" @click="handleLoginClick">登陆</a>
@@ -24,6 +24,7 @@
 
 <script>
 import api from "@/api";
+import { Toast } from "vant";
 
 export default {
   name: "Login",
@@ -47,6 +48,13 @@ export default {
     },
     handleLoginClick() {
       // console.log(this.input.username, this.input.password);
+      api.login(this.input.username, this.input.password)
+        .then(res => {
+          const data = res.data;
+          data.status === 1 && Toast('登陆成功');
+          this.$store.commit('userLogin', data.data);
+          this.$router.push('/'); 
+        });
     },
     handleRegClick() {
       this.$emit('show-reg-event');
