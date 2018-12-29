@@ -5,7 +5,8 @@ import Classify from "./views/classify/Classify.vue";
 import Stroll from "./views/stroll/Stoll.vue";
 import Cart from "./views/cart/Cart.vue";
 import User from "./views/user/User.vue";
-import Item from "./common/Item.vue"
+import Order from "./views/order/Order.vue";
+import Item from "./common/Item.vue";
 
 Vue.use(Router);
 
@@ -35,6 +36,12 @@ export default new Router({
       name: "Shoes",
       path: "/shoes/:id",
       component: Item
+    },
+    {
+      name: "Order",
+      path: "/order",
+      component: Order,
+      props: true
     },
     {
       name: "Home",

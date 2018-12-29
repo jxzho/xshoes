@@ -43,6 +43,38 @@
         </div>
       </div>
     </section>
+    <transition>
+      <aside class="shoesInfo-area" 
+            v-show="showInfoSelect">
+        <van-icon name="clear" @click="handleHideSelect"/>
+        <div class="shoes-info border-bottom">
+          <div class="img">
+            <img :src="shoes.picture">
+          </div>
+          <div class="info">
+            <span class="price">¥ {{shoes.price}}</span>
+            <div class="num">库存{{shoes.num}}件</div>
+          </div>
+        </div>
+        <div class="size-area border-bottom">
+          <h2 class="title">尺码</h2>
+          <div class="size-select" @click="handleSizeSelect">
+            <span class="size"
+                  :class="{selected: size === shoesSelect.size}" 
+                  v-for="(size, index) in shoesSize" 
+                  :key="index">
+              {{size}}
+            </span>
+          </div>
+        </div>
+        <div class="buy-num-select border-bottom">
+          <h2 class="title">购买数量</h2>
+          <van-stepper v-model="shoesSelect.buyNum" />
+        </div>
+        <div class="address-select"></div>
+        <div class="commit" @click="handleToOrder">确定</div>
+      </aside>
+    </transition>
     <footer class="action">
       <van-goods-action>
         <van-goods-action-mini-btn
@@ -63,6 +95,7 @@
         <van-goods-action-big-btn
           primary
           text="立即购买"
+          @click="handleBuyNow"
         />
       </van-goods-action>
     </footer>
@@ -83,7 +116,7 @@ export default {
         id: 1,
         name: "addidas",
         price: 100,
-        desc: 'desc 我是描述',
+        desc: 'desc 我是描述我是描述我是描述我是描述我是描述我是描述我是描述我是描述我是描述我是描述',
         num: 10,
         picture: "//img.alicdn.com/imgextra/i4/834807033/O1CN01BWgcPq21pA0K8COgK_!!0-item_pic.jpg_760x760Q50s50.jpg",
         imgs: [
@@ -98,7 +131,15 @@ export default {
       curIndex: 0,
       navOptions: {
         title: "SHOES DETAIL"
-      }
+      },
+      shoesSelect: {
+        size: 38,
+        buyNum: 0
+      },
+      shoesSize: [
+        36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46
+      ],
+      showInfoSelect: false
     }
   },
   methods: {
@@ -139,9 +180,31 @@ export default {
         isAdd: 1
       });
       Toast.success('添加成功');
+    },
+    handleSizeSelect(e) {
+      const curEle = e.target,
+            buyNum = +curEle.innerText;
+      this.shoesSelect.size = buyNum;
+    },
+    handleBuyNow() {
+      this.showInfoSelect = true;
+    },
+    handleHideSelect() {
+      console.log(123);
+      this.showInfoSelect = false;
+    },
+    handleToOrder() {
+      this.$router.push({
+        name: "Order",
+        params: {
+          data: this.shoesOrderInfo
+        }
+      });
     }
   },
   computed: {
+    ...mapState(['user', 'cart']),
+    ...mapGetters(['cartTotal']),
     imgsLength() {
       return this.shoes.imgs.length;
     },
@@ -154,8 +217,17 @@ export default {
         status = cart.some(item => item.id === curId);
       return status;
     },
-    ...mapState(['user', 'cart']),
-    ...mapGetters(['cartTotal'])
+    shoesOrderInfo() {
+      return {
+        id: this.shoes.id,
+        name: this.shoes.name,
+        description: this.shoes.desc,
+        picture: this.shoes.picture,
+        price: this.shoes.price,
+        buyNum: this.shoesSelect.buyNum,
+        size: this.shoesSelect.size
+      }
+    }
   },
   mounted() {
     this.$nextTick(() => {
@@ -232,7 +304,9 @@ export default {
             font-weight: 600;
           }
           .desc {
-            font-size: .18rem;
+            font-size: .16rem;
+            line-height: .16rem;
+            .mul-overflow();
           }
 
           .price {
@@ -273,6 +347,130 @@ export default {
         }
       }
     }
+
+    .shoesInfo-area {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 5rem;
+      background: #fff;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+      padding: 0 .1rem;
+      z-index: 3;
+
+      .van-icon {
+        position: absolute;
+        top: 0; right: 0;
+        font-size: .2rem;
+        line-height: .2rem;
+        margin: .1rem .1rem 0 0;
+        z-index: 3;
+      }
+
+      .shoes-info {
+        display: flex;
+        padding: .1rem 0;
+
+        .img {
+          width: 1rem;
+          height: 1rem;
+          border-radius: 4px;
+          overflow: hidden;
+          margin-right: .1rem;
+          img { width: 100%; }
+        }
+
+        .info {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
+
+          .price {
+            font-size: .18rem;
+            line-height: .18rem;
+            color: @xRed;
+          }
+          .num { line-height: 1; }
+        }
+      }
+
+      .size-area {
+        padding: .1rem 0;
+
+        .title {
+          font-size: .16rem;
+          color: #000;
+        }	
+
+        .size-select {
+          display: flex;
+          flex-wrap: wrap;
+
+          .size {
+            background: rgba(143, 143, 143, 0.1);
+            padding: .02rem .1rem;
+            margin: .1rem;
+            color: #000;
+            border-radius: 4px;
+            overflow: hidden;
+            font-size: .14rem;
+            line-height: .15rem;
+
+            &.selected {
+              background: @xRed;
+              color: #fff;
+            }
+          }
+        }
+      }
+      
+      .buy-num-select {
+        padding: .1rem 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .title {
+          font-size: .16rem;
+          color: #000;
+        }
+
+        & /deep/ .van-stepper .van-stepper__input {
+          color: #000;
+        }
+      }
+
+      .commit {
+        position: absolute;
+        bottom: 0; left: 0; right: 0;
+        height: .5rem;
+        line-height: .5rem;
+        font-size: .2rem;
+        color: #fff;
+        background: @xRed;
+        text-align: center;
+        &:active {
+          filter: brightness(80%);
+        }
+      }
+    }
+
+    .action {
+      position: absolute;
+      height: .5rem;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+  }
+
+  .v-enter, .v-leave-to {
+    opacity: 1;
+    transform: translateY(100%);
+  }
+  .v-enter-activ, .v-leave-active {
+    transition: .3s ease;
   }
 </style>
 

@@ -135,6 +135,7 @@ export default {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background: rgba(0, 0, 0, .02);
             border: 1px solid rgba(0, 0, 0, .08);
             border-radius: .2rem;
             overflow: hidden;
