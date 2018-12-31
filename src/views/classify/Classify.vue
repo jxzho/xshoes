@@ -4,7 +4,7 @@
     <section class="main">
       <van-tabs>
         <van-tab 
-          v-for="(item, index) in classify" 
+          v-for="(item, index) in shoes" 
           :title="item.title" 
           :key="'xshoes-classify-' + index"
           >
@@ -13,11 +13,11 @@
               :key="index">
             <van-card
             tag="限时特价"
-            price="20.00"
-            desc="运动生活"  
-            title="健身衣服"
-            :thumb="'http://shihuo.hupucdn.com/ucditor/20180910/720x720_6b83607247ff03139a9a37e7acdf533a.jpeg?imageMogr2/format/jpg'"
-            origin-price="100.00"
+            :price="shoes.price"
+            :desc="shoes.description"  
+            :title="shoes.name"
+            :thumb="shoes.picture"
+            :origin-price="shoes.price * 1.25"
             @click.native="handleDetailClick(shoes.id)"
             ></van-card>
           </div>
@@ -32,21 +32,23 @@
 import HeaderNav from "common/HeaderNav";
 import FooterNav from "common/FooterNav";
 import classifyInfo from "assets/js/classify";
+import shoesConfig from "assets/js/shoes";
 import BScroll from "better-scroll";
+import api from "@/api";
 
 export default {
   name: "Classify",
   data() {
     return {
-      classify: classifyInfo,
+      classifyInfo: classifyInfo,
       // 左侧高亮元素的index
+      shoes: [],
       mainActiveIndex: 0,
       activeId: 1
     };
   },
   methods: {
     handleDetailClick(id) {
-      console.log(id);
       this.$router.push(`/shoes/${id}`);
     },
     bscrollInit() {
@@ -61,11 +63,42 @@ export default {
         }
       });
     },
+    getShoesData() {
+      api.getShoes().then(res => {
+        if (res.data.status === 1) {
+          this.shoes = res.data.data;
+          this.classifyShoess();
+          this.$nextTick(() => {
+            this.bscrollInit();
+          });
+        }
+      });
+    },
+    classifyShoess() {
+      let result = [],
+          kinds = shoesConfig.kinds,
+          keys = Object.keys(kinds),
+          shoes = this.shoes;
+      
+      keys.forEach(key => {
+        let item = kinds[key];
+        result.push({
+          title: item,
+          contents: []
+        });
+      });
+
+      shoes.forEach(item => {
+        let kind = item.kind;
+        result[kind - 1].contents.push(item);
+      });
+
+      this.shoes = result;
+    }
   },
   mounted() {
-    this.$nextTick(() => {
-      this.bscrollInit();
-    });
+    // 获取shoes所有数据
+    this.getShoesData();
   },
   components: {
     HeaderNav,

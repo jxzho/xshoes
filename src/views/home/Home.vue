@@ -12,6 +12,7 @@ import HomeHeader from "./components/HomeHeader";
 import HomeBody from "./components/home_body/HomeBody";
 import FooterNav from "common/FooterNav";
 import { mapState } from "vuex";
+import api from "@/api";
 
 export default {
   name: "Home",
@@ -24,11 +25,18 @@ export default {
     HomeBody,
     FooterNav
   },
+  methods: {
+    getShoes() {
+      api.getShoes().then(res => {
+        this.$store.commit('setShoes', res.data.data);
+      });
+    }
+  },
   computed: {
     ...mapState(['user'])
   },
   mounted() {
-    // console.log(this.user);
+    this.getShoes();
   }
 };
 

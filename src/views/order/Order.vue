@@ -4,12 +4,12 @@
     <section class="main" ref="wrapper">
       <div class="content">
         <OrderAddress></OrderAddress>
-        <OrderShoes :shoesData="shoesData"></OrderShoes>
+        <OrderShoes></OrderShoes>
       </div>
     </section>
     <van-submit-bar
-      :price="0"
-      button-text="提交订单"
+      :price="orderTotalPrice * 100"
+      button-text="支付"
       @submit="onSubmit"
     />
   </div>
@@ -20,6 +20,7 @@ import HeaderNav from "common/HeaderNav";
 import OrderAddress from "./components/OrderAddress";
 import OrderShoes from "./components/OrderShoes";
 import BScroll from 'better-scroll';
+import { mapState, mapGetters } from "vuex";
 
 export default {
   name: "Order",
@@ -32,7 +33,11 @@ export default {
   },
   methods: {
     onSubmit() {
-      console.log(this.shoesData);
+      const orderData = {
+        totalPrice: this.orderTotalPrice,
+        ...this.order,
+      };
+      console.log(orderData);
     },
     bscrollInit() {
       this.$nextTick(() => {
@@ -52,9 +57,8 @@ export default {
     },
   },
   computed: {
-    shoesData() {
-      return this.$route.params.data;
-    }
+    ...mapState(['order']),
+    ...mapGetters(['orderTotalPrice'])
   },
   mounted() {
     this.bscrollInit();

@@ -1,4 +1,4 @@
-let userInfo = null;
+let userInfo = {};
 
 try {
   if (localStorage.user) {
@@ -9,6 +9,8 @@ try {
 }
 
 export default {
+  shoes: [],
   user: userInfo,
-  cart: []
+  cart: [],
+  order: {}
 };

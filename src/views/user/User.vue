@@ -18,6 +18,9 @@
         <UserReg v-show="showReg"></UserReg>
       </transition>
     </section>
+    <transition>
+      <router-view></router-view>
+    </transition>
   </div>
 </template>
 
@@ -86,8 +89,7 @@ export default {
 }
 
 .v-enter, .v-leave-to {
-  opacity: 0;
-  transform: translateX(-100%);
+  transform: translateX(100%);
 }
 
 .v-enter-active, .v-leave-active {

@@ -1,6 +1,8 @@
 <template>
   <div id="entry">
-    <router-view/>
+    <!-- <keep-alive exclude="User"> -->
+      <router-view/>
+    <!-- </keep-alive> -->
   </div>
 </template>
 

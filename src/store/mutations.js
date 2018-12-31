@@ -1,4 +1,8 @@
 export default {
+  setShoes(state, shoes) {
+    state.shoes = shoes;
+  },
+
   userLogin(state, user) {
     localStorage.user = JSON.stringify(user);
     state.user = user;
@@ -6,7 +10,16 @@ export default {
 
   userLogout(state) {
     localStorage.removeItem("user");
-    state.user = null;
+    state.user = {};
+  },
+
+  updateUserInfo(state, update) {
+    let user = state.user;
+    for (let key in user) {
+      if (key === update.attr) {
+        user[key] = update.data;
+      }
+    }
   },
 
   addToCart(state, shoes) {
@@ -47,5 +60,20 @@ export default {
 
   clearCart(state) {
     state.cart = {};
+  },
+
+  createOrder(state, order) {
+    state.order = order;
+  },
+
+  updateOrder(state, num) {
+    let order = state.order;
+    if (num < 0 && order.buyNum === 1) {
+      order.buyNum += num;
+    }
+  },
+
+  addAddressMTS(state, address) {
+    state.user.address = [address];
   }
 };

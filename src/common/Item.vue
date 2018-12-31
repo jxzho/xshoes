@@ -10,30 +10,26 @@
       </nav>
       <div class="wrapper" ref="wrapper">
         <div class="content">
+          <!-- 轮播 -->
           <section class="imgs">
-            <van-swipe :autoplay="3000" indicator-color="royalblue" @change="onImgChange">
-              <van-swipe-item v-for="(src, index) in shoes.imgs" :key="index">
-                <div class="slide-img">
-                  <img :src="src">
-                </div>
-              </van-swipe-item>
-              <div class="custom-indicator" slot="indicator">
-                {{ curIndex + 1 }}/{{ imgsLength }}
-              </div>
-            </van-swipe>
+            <swiper :options="swiperOption">
+              <swiper-slide v-for="(img, index) in item.imgs" :key="index">
+                <img :src="img">
+              </swiper-slide>
+            </swiper>
           </section>
           <section class="info">
-            <div class="name">{{shoes.name}}</div>
-            <div class="desc">{{shoes.desc}}</div>
-            <div class="price border-bottom">¥{{shoes.price}}</div>
+            <div class="name">{{item.name}}</div>
+            <div class="desc">{{item.description}}</div>
+            <div class="price border-bottom">¥{{item.price}}</div>
             <div class="pint">
               <span class="postage">运费: 免运费</span>
-              <span class="num">剩余: {{shoes.num}}</span>
+              <span class="num">剩余: {{item.num}}</span>
             </div>
           </section>
           <section class="comment" ref="comment">
             <div class="title">
-              <span class="comments-num">商品评价 ({{shoes.comments.length}})</span>
+              <span class="comments-num">商品评价 ({{item.comments.length}})</span>
               <a class="view-all-comments" href="javascript:;">查看全部 ></a>
             </div>
             <div class="comment-one">
@@ -43,17 +39,17 @@
         </div>
       </div>
     </section>
-    <transition>
+    <transition name="upSlide">
       <aside class="shoesInfo-area" 
             v-show="showInfoSelect">
         <van-icon name="clear" @click="handleHideSelect"/>
         <div class="shoes-info border-bottom">
           <div class="img">
-            <img :src="shoes.picture">
+            <img :src="item.picture">
           </div>
           <div class="info">
-            <span class="price">¥ {{shoes.price}}</span>
-            <div class="num">库存{{shoes.num}}件</div>
+            <span class="price">¥ {{item.price}}</span>
+            <div class="num">库存{{item.num}}件</div>
           </div>
         </div>
         <div class="size-area border-bottom">
@@ -112,21 +108,9 @@ export default {
   name: "Item",
   data() {
     return {
-      shoes: {
-        id: 1,
-        name: "addidas",
-        price: 100,
-        desc: 'desc 我是描述我是描述我是描述我是描述我是描述我是描述我是描述我是描述我是描述我是描述',
-        num: 10,
-        picture: "//img.alicdn.com/imgextra/i4/834807033/O1CN01BWgcPq21pA0K8COgK_!!0-item_pic.jpg_760x760Q50s50.jpg",
-        imgs: [
-          "//img.alicdn.com/imgextra/i4/834807033/O1CN01BWgcPq21pA0K8COgK_!!0-item_pic.jpg_760x760Q50s50.jpg",
-          "//img.alicdn.com/imgextra/i4/834807033/O1CN01BWgcPq21pA0K8COgK_!!0-item_pic.jpg_760x760Q50s50.jpg",
-          "//img.alicdn.com/imgextra/i4/834807033/O1CN01BWgcPq21pA0K8COgK_!!0-item_pic.jpg_760x760Q50s50.jpg"
-        ],
-        comments: [
-          "我是评论","我是评论","我是评论","我是评论"
-        ]
+      item: {
+        imgs: [],
+        comments: []
       },
       curIndex: 0,
       navOptions: {
@@ -139,10 +123,32 @@ export default {
       shoesSize: [
         36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46
       ],
-      showInfoSelect: false
+      showInfoSelect: false,
+      swiperOption: {
+        pagination: '.swiper-pagination',
+        loop: true,
+        observer: true,
+        observeParents: true
+      }
     }
   },
   methods: {
+    initData() {
+      let params = this.$route.params,
+          item = undefined;
+
+      try {
+        item = this.shoes.find(item => {
+          return item.id == params.id
+        })
+        item = Object.assign({}, item);
+        item.imgs = JSON.parse(item.imgs);
+      } catch (e) {
+        console.log(e);
+      }
+      
+      this.item = item;
+    },
     onImgChange(index) {
       return this.curIndex = index;
     },
@@ -168,13 +174,13 @@ export default {
       this.$router.push('/cart');
     },
     handleAddCart() {
-      const shoes = this.shoes;
+      const item = this.item;
       this.$store.commit('addToCart', {
         id: this.$route.params.id,
-        price: shoes.price,
-        picture: shoes.picture,
-        name: shoes.name,
-        desc: shoes.desc,
+        price: item.price,
+        picture: item.picture,
+        name: item.name,
+        description: item.description,
         buyNum: 1,
         checked: true,
         isAdd: 1
@@ -190,23 +196,18 @@ export default {
       this.showInfoSelect = true;
     },
     handleHideSelect() {
-      console.log(123);
       this.showInfoSelect = false;
     },
     handleToOrder() {
-      this.$router.push({
-        name: "Order",
-        params: {
-          data: this.shoesOrderInfo
-        }
-      });
+      this.$store.commit('createOrder', this.shoesOrderInfo);
+      this.$router.push('/order');
     }
   },
   computed: {
-    ...mapState(['user', 'cart']),
+    ...mapState(['shoes', 'user', 'cart']),
     ...mapGetters(['cartTotal']),
     imgsLength() {
-      return this.shoes.imgs.length;
+      return this.item.imgs.length;
     },
     AddCartText() {
       return this.isAddCart ? "已加入购物车" : "加入购物车"; 
@@ -219,17 +220,18 @@ export default {
     },
     shoesOrderInfo() {
       return {
-        id: this.shoes.id,
-        name: this.shoes.name,
-        description: this.shoes.desc,
-        picture: this.shoes.picture,
-        price: this.shoes.price,
+        id: this.item.id,
+        name: this.item.name,
+        description: this.item.description,
+        picture: this.item.picture,
+        price: this.item.price,
         buyNum: this.shoesSelect.buyNum,
         size: this.shoesSelect.size
       }
     }
   },
   mounted() {
+    this.initData();
     this.$nextTick(() => {
       this.bscrollInit();
     });
@@ -271,24 +273,14 @@ export default {
         .imgs {
           background: #fff;
 
-          .van-swipe {
-
-            .slide-img {
-              width: 100%;
-              img {
-                width: 100%;
-              }
-            }
-
-            .custom-indicator {
-              position: absolute;
-              right: .1rem;
-              bottom: .1rem;
-              background: #bbb;
-              padding: 2px 10px;
-              border-radius: 20px;
-              color: #fff;
-            }
+          & /deep/ .swiper-wrapper {
+            display: flex;
+          }
+          & /deep/ .swiper-slide img {
+            width: 3.75rem;
+          }
+          & /deep/ .swiper-pagination-bullet-active {
+            background: #fff;
           }
         }
 
@@ -357,6 +349,7 @@ export default {
       border-top-right-radius: 12px;
       padding: 0 .1rem;
       z-index: 3;
+      box-shadow: 0 2px 20px rgba(0, 0, 0, .1);
 
       .van-icon {
         position: absolute;
@@ -465,11 +458,11 @@ export default {
     }
   }
 
-  .v-enter, .v-leave-to {
+  .upSlide-enter, .upSlide-leave-to {
     opacity: 1;
     transform: translateY(100%);
   }
-  .v-enter-activ, .v-leave-active {
+  .upSlide-enter-active, .upSlide-leave-active {
     transition: .3s ease;
   }
 </style>

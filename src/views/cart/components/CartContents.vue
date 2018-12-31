@@ -5,12 +5,12 @@
         <van-checkbox 
           v-model="item.checked" 
           @change="handleCheckedChange(item.id, item.checked)"
-          checked-color="royalblue">
+          checked-color="#51C57F">
         </van-checkbox>
         <div class="img"><img :src="item.picture"></div>
         <div class="text">
           <h2 class="name">{{item.name}}</h2>
-          <p class="desc">{{item.desc}}</p>
+          <p class="desc">{{item.description}}</p>
           <span class="price">¥ {{item.price}}</span>
           <section class="update-num">
             <span class="add border-right" @click="handleChangeNum(item.id, -1)">-</span>
@@ -73,7 +73,7 @@ export default {
 </script> 
 
 <style lang="less" scoped>
-@imgLen: 1.2rem;
+@imgLen: 1rem;
   .cart-contents {
     position: absolute;
     top: .52rem; bottom: .5rem; left: 0; right: 0;
@@ -85,7 +85,7 @@ export default {
         display: flex;
         background: #fff;
         border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, .2);
+        box-shadow: 0 2px 20px rgba(0, 0, 0, .1);
         padding: .1rem .05rem;
         margin-bottom: .08rem;
 
@@ -104,6 +104,8 @@ export default {
         .text {
           flex: 1;
           position: relative;
+          .flex-column();
+          .mul-overflow();
 
           .name {
             color: rgba(0, 0, 0, .8);
@@ -158,6 +160,12 @@ export default {
             }
           }
 
+        }
+
+        .van-checkbox {
+          display: flex;
+          justify-content: center;
+          align-items: center;  
         }
       }
     }

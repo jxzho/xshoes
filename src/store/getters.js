@@ -1,6 +1,7 @@
 export default {
   isLogin: state => {
-    return Boolean(state.user);
+    const result = JSON.stringify(state.user);
+    return result === "{}" ? false : true;
   },
   isAllChecked: state => {
     const flag = state.cart.some(item => {
@@ -18,5 +19,6 @@ export default {
     }
 
     return totalPrice;
-  }
+  },
+  orderTotalPrice: state => state.order.buyNum * state.order.price
 };

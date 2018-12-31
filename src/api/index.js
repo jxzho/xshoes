@@ -14,5 +14,15 @@ export default {
       username,
       password
     });
+  },
+
+  // 首页
+  getShoes() {
+    return axios.get("/shoes");
+  },
+
+  // 添加地址
+  addUserAddress(address) {
+    return axios.post("/user/address/add", address);
   }
 };

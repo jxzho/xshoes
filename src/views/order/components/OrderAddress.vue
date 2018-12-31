@@ -1,12 +1,12 @@
 <template>
   <div class="order-address border-bottom">
     <div class="top-area">
-      <span class="username">收货人：钟俊雄</span>
-      <div class="tel">13049896626</div>
+      <span class="username">收货人：{{user.name}}</span>
+      <div class="tel">{{user.tel}}</div>
     </div>
     <div class="address-area">
       <i class="pos">&#xe651;</i>
-      <p class="text">收货地址：广东省东莞市松山湖东莞理工学院小麦公社</p>
+      <p class="text">收货地址：{{user.address}}</p>
       <i class="change">&#xe604;</i>
     </div>
     <div class="line"></div>
@@ -14,8 +14,13 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
-  name: "OrderAddress"
+  name: "OrderAddress",
+  computed: {
+    ...mapState(['user'])
+  }
 }
 </script>
 

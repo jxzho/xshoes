@@ -1,28 +1,38 @@
 <template>
   <div class="order-shoes">
     <div class="picture">
-      <img :src="shoesData.picture">
+      <img :src="order.picture">
     </div>
     <section class="info">
       <div>
-        <span class="name">{{shoesData.name}}</span>
-        <p class="desc">{{shoesData.description}}</p>
+        <span class="name">{{order.name}}</span>
+        <p class="desc">{{order.description}}</p>
       </div>
       <footer class="price">
-        <span>¥ {{shoesData.price}}</span>
-        <i>×{{shoesData.buyNum}}</i>
+        <span>¥ {{order.price}}</span>
+        <i>×{{order.buyNum}}</i>
       </footer>
     </section>
     <div class="change-buy-num">
-      <!-- <van-stepper v-model="shoesData.buyNum"/> -->
+      <h2 class="title">购买数量</h2>
+      <van-stepper v-model="order.buyNum" @change="handleBuyNumChange"/>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   name: "OrderShoes",
-  props: ['shoesData'],
+  methods: {
+    handleBuyNumChange(num) {
+      this.$store.commit('updateOrder', num);
+    }
+  },
+  computed: {
+    ...mapState(['order'])
+  }
 }
 </script>
 
@@ -71,10 +81,9 @@ export default {
 
         span {
           color: @xRed;
-          font-size: .2rem;
+          font-size: .18rem;
           line-height: 1;
           align-items: self-end;
-          font-weight: 500;
         }
       
         i {
@@ -83,6 +92,21 @@ export default {
           font-weight: 500;
           color: rgba(0, 0, 0, 1);
         }
+      }
+    }
+
+    .change-buy-num {
+      position: absolute;
+      bottom: -30px; left: 0; right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 10px 5px 10px;
+      background: #fff;
+
+      .title {
+        color: #000;
+        line-height: 1;
       }
     }
   }
