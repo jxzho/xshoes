@@ -48,6 +48,10 @@ export default {
     },
     handleLoginClick() {
       // console.log(this.input.username, this.input.password);
+      Toast.loading({
+        mask: true,
+        duration: 0
+      });
       api.login(this.input.username, this.input.password)
         .then(res => {
           const data = res.data;

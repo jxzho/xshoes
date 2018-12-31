@@ -22,7 +22,7 @@ export default {
   },
 
   // 添加地址
-  addUserAddress(address) {
-    return axios.post("/user/address/add", address);
+  editAddress(address, action) {
+    return axios.post("/user/address/" + action, address);
   }
 };

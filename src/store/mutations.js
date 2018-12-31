@@ -73,7 +73,14 @@ export default {
     }
   },
 
-  addAddressMTS(state, address) {
-    state.user.address = [address];
+  updateAddressMTS(state, address) {
+    state.user = {
+      ...state.user,
+      address
+    };
+  },
+
+  setChangeAddress(state, address) {
+    state.changedAddress = address;
   }
 };

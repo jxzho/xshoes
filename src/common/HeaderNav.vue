@@ -52,7 +52,7 @@
           <li class="info-item border-bottom" @click="handleToUserAddress">
             <span class="title">我的收货地址</span>
             <div class="info-show">
-              {{3}}
+              {{userAddress.length ? userAddress.length : '未设置'}}
               <i class="change-icon">&#xe604;</i>
             </div>
           </li>
@@ -171,14 +171,21 @@ export default {
     handleToUserAddress() {
       if (!this.user.address) {
         Toast.fail('你还没有收货地址，还去添加一个吧~');
-        this.$router.push('/user/addAddress');
+        this.$router.push('/user/address/add');
       } else {
         this.$router.push("/user/address");
       }
     }
   },
   computed: {
-    ...mapState(['user'])
+    ...mapState(['user']),
+    userAddress() {
+      if (!this.user.address) return [];
+      if (typeof this.user.address === 'string') {
+        return JSON.parse(this.user.address);
+      }
+      return this.user.address;
+    }
   },
   components: {
     Actionsheet

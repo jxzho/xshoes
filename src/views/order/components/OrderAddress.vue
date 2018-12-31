@@ -1,15 +1,27 @@
 <template>
   <div class="order-address border-bottom">
-    <div class="top-area">
-      <span class="username">收货人：{{user.name}}</span>
-      <div class="tel">{{user.tel}}</div>
-    </div>
-    <div class="address-area">
-      <i class="pos">&#xe651;</i>
-      <p class="text">收货地址：{{user.address}}</p>
-      <i class="change">&#xe604;</i>
-    </div>
-    <div class="line"></div>
+    <section v-if="userAddress.length" @click="handleChangeAddress">
+      <div class="top-area">
+        <span class="username">收货人：{{addressSelected.name}}</span>
+        <div class="tel">{{addressSelected.tel}}</div>
+      </div>
+      <div class="address-area">
+        <i class="pos">&#xe651;</i>
+        <p class="text">
+          <van-tag type="danger" size="medium" v-show="addressSelected.isDefault">
+            默认
+          </van-tag>
+          收货地址：{{addressSelected.area + addressSelected.detail}}
+        </p>
+        <i class="change">&#xe604;</i>
+      </div>
+      <div class="line"></div>
+    </section>
+    <section class="add-area" @click="handleAddressAdd" v-if="!userAddress.length">
+      <button class="addBtn">
+        添加收货地址
+      </button>
+    </section>
   </div>
 </template>
 
@@ -18,8 +30,35 @@ import { mapState } from "vuex";
 
 export default {
   name: "OrderAddress",
+  data() {
+    return {
+      addressSelected: ''
+    }
+  },
+  methods: {
+    handleAddressAdd() {
+      this.$router.push('/user/address/add');
+    },
+    handleChangeAddress() {
+      this.$router.push('/user/address');
+    }
+  },
   computed: {
-    ...mapState(['user'])
+    ...mapState(['user', 'changedAddress']),
+    userAddress() {
+      if (typeof this.user.address === 'string') {
+        return JSON.parse(this.user.address);
+      }
+      return this.user.address;
+    }
+  },
+  mounted() {
+    if (this.userAddress.length > 0) {
+      this.addressSelected = this.userAddress.find(item => item.isDefault);
+      if (this.changedAddress) {
+        this.addressSelected = this.changedAddress;
+      }
+    }
   }
 }
 </script>
@@ -28,7 +67,6 @@ export default {
   .area-style() {
     margin: 0 0 .05rem 0;
     padding-left: .3rem;
-    font-size: .16rem;
     line-height: 1;
   }
 
@@ -64,7 +102,7 @@ export default {
 
       .pos {
         font-family: "iconfont";
-        font-size: .22rem;
+        font-size: .20rem;
         line-height: 1;
         position: absolute;
         left: 0;
@@ -74,11 +112,17 @@ export default {
         position: absolute;
         right: 0;
         transform: rotate(180deg);
-        font-weight: 600;
       }
 
       .text {
         flex: 1;
+      }
+    }
+
+    .add-area {
+      .addBtn {
+        color: @xRed;
+        background: inherit;
       }
     }
 

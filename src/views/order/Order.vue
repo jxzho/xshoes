@@ -3,7 +3,7 @@
     <HeaderNav :navOptions="navOptions"></HeaderNav>
     <section class="main" ref="wrapper">
       <div class="content">
-        <OrderAddress></OrderAddress>
+        <OrderAddress :changedAddress="changedAddress"></OrderAddress>
         <OrderShoes></OrderShoes>
       </div>
     </section>
@@ -34,8 +34,9 @@ export default {
   methods: {
     onSubmit() {
       const orderData = {
-        totalPrice: this.orderTotalPrice,
         ...this.order,
+        totalPrice: this.orderTotalPrice,
+        address: this.changedAddress
       };
       console.log(orderData);
     },
@@ -57,7 +58,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(['order']),
+    ...mapState(['order', 'changedAddress']),
     ...mapGetters(['orderTotalPrice'])
   },
   mounted() {

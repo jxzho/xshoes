@@ -6,7 +6,7 @@ import Stroll from "./views/stroll/Stoll.vue";
 import Cart from "./views/cart/Cart.vue";
 import User from "./views/user/User.vue";
 import UserAdress from "./views/user/UserAdress.vue";
-import UserAddAddress from "./views/user/UserAddAddress.vue";
+import UserEditAddress from "./views/user/UserEditAddress.vue";
 import Order from "./views/order/Order.vue";
 import Item from "./common/Item.vue";
 
@@ -35,12 +35,14 @@ export default new Router({
       component: User,
       children: [
         {
+          name: "UserAddress",
           path: "address",
           component: UserAdress
         },
         {
-          path: "addAddress",
-          component: UserAddAddress
+          name: "UserEditAddress",
+          path: "address/:action",
+          component: UserEditAddress
         }
       ]
     },

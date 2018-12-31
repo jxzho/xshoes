@@ -12,5 +12,6 @@ export default {
   shoes: [],
   user: userInfo,
   cart: [],
-  order: {}
+  order: {},
+  changedAddress: ""
 };
