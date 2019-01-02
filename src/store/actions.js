@@ -3,6 +3,7 @@ import { Toast } from "vant";
 import router from "@/router";
 
 export default {
+
   editAddress({ commit }, data) {
     const addressInfo = data.addressInfo;
     Toast.loading({ mask: true, duration: 0 });
@@ -17,5 +18,10 @@ export default {
         Toast.fail("操作失败");
       }
     });
+  },
+
+  addToCart({ commit }, data) {
+    
   }
+
 };

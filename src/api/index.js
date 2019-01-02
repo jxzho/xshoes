@@ -24,5 +24,30 @@ export default {
   // 添加地址
   editAddress(address, action) {
     return axios.post("/user/address/" + action, address);
+  },
+
+  // 发起支付
+  payment(orderData) {
+    return axios.post("/order/pay", orderData);
+  },
+
+  // 提交订单
+  commitOrder(data) {
+    return axios.post("/order/add", data);
+  },
+
+  // 提交购物车
+  commitScart(data) {
+    return axios.post("/scart/add", data);
+  },
+
+  // 获取我的订单数据
+  getOrder(id) {
+    return axios.get("/order/" + id);
+  },
+
+  // 获取我的购物车数据
+  getScart(id) {
+    return axios.get("/scart/" + id);
   }
 };

@@ -1,7 +1,7 @@
 <template>
   <div class="cart-footer">
     <van-submit-bar
-      v-show="cartTotalPrice"
+      v-show="true"
       :price="cartTotalPrice * 100"
       button-text="提交订单"
       @submit="onSubmit"
@@ -55,9 +55,6 @@ export default {
     ...mapGetters(['cartTotalPrice'])
   },
   mounted() {
-    if (this.cartTotalPrice === 0) {
-      Toast.fail('你的购物车空空如也哦~');
-    }
   }
 }
 </script>

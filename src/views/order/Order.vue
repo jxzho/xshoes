@@ -3,7 +3,7 @@
     <HeaderNav :navOptions="navOptions"></HeaderNav>
     <section class="main" ref="wrapper">
       <div class="content">
-        <OrderAddress :changedAddress="changedAddress"></OrderAddress>
+        <OrderAddress :scart_id="scart_id" @set-address="handleSetAddress"></OrderAddress>
         <OrderShoes></OrderShoes>
       </div>
     </section>
@@ -12,6 +12,7 @@
       button-text="支付"
       @submit="onSubmit"
     />
+    <div ref="form"></div>
   </div>
 </template>
 
@@ -21,6 +22,8 @@ import OrderAddress from "./components/OrderAddress";
 import OrderShoes from "./components/OrderShoes";
 import BScroll from 'better-scroll';
 import { mapState, mapGetters } from "vuex";
+import api from "@/api";
+import { Toast } from 'vant';
 
 export default {
   name: "Order",
@@ -28,17 +31,19 @@ export default {
     return {
       navOptions: {
         title: "确认订单"
-      }
+      },
+      address: '',
+      dingdanhao: ''
     }
   },
   methods: {
+    handleSetAddress(address) {
+      this.address = address;
+    },
     onSubmit() {
-      const orderData = {
-        ...this.order,
-        totalPrice: this.orderTotalPrice,
-        address: this.changedAddress
-      };
-      console.log(orderData);
+      this.dingdanhao = this.createdOrderId();
+      Toast.loading({ mask: true, duration: 0, message: '正跳转至支付宝页面' });
+      this.commitOrder();
     },
     bscrollInit() {
       this.$nextTick(() => {
@@ -56,10 +61,49 @@ export default {
         }
       });
     },
+    createdOrderId() {
+      const f = Date.now().toString(),
+            s = Math.round(Math.random()*8999 + 1000).toString(),
+            t = this.user.id.toString();
+      return f + s + t;
+    },
+    pay() {
+      const _this = this;
+      const orderData = {
+        'subject': this.order.name,
+        'out_trade_no': this.dingdanhao,
+        'total_amount': this.orderTotalPrice
+      };
+      api.payment(orderData).then(function (res) {
+        const form = res.data;
+        _this.$refs.form.innerHTML = form;
+        document.forms['alipaysubmit'].submit();
+      });
+    },
+    commitOrder() {
+      const user = this.user;
+      const data = {
+        'dingdanhao': this.dingdanhao,
+        'user_id': user.id,
+        'address': this.address,
+        'scart_id': this.scart_id,
+        'total_price': this.orderTotalPrice
+      };
+      api.commitOrder(data).then(({ data }) => {
+        if (data.status === 1) {
+          this.pay();
+        } else {
+          Toast.fail('订单写入数据库失败, 请重新购买并支付！');
+        }
+      });
+    }
   },
   computed: {
-    ...mapState(['order', 'changedAddress']),
-    ...mapGetters(['orderTotalPrice'])
+    ...mapState(['order', 'changedAddress', 'user']),
+    ...mapGetters(['orderTotalPrice']),
+    scart_id() {
+      return this.$route.params['scart_id'];
+    }
   },
   mounted() {
     this.bscrollInit();

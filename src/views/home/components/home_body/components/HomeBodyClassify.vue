@@ -47,17 +47,18 @@ export default {
 <style lang="less" scoped>
 .homeBD-classify {
   margin-top: @secOffset;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
 
   .content {
     width: 49.6%;
     height: .63rem;
-    float: left;
     background: #fff;
-    margin-bottom: 2px;
-    box-sizing: border-box;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-sizing: border-box;
     padding: 0 .2rem;
     
     .tit {
@@ -83,9 +84,6 @@ export default {
       }
     }
 
-    &:nth-of-type(odd) {
-      margin-right: 3px;
-    }
   }
 
 }

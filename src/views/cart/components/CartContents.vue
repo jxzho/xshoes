@@ -7,14 +7,15 @@
           @change="handleCheckedChange(item.id, item.checked)"
           checked-color="#51C57F">
         </van-checkbox>
-        <div class="img"><img :src="item.picture"></div>
+        <div class="img"><img :src="item['shoe_info'].picture"></div>
         <div class="text">
-          <h2 class="name">{{item.name}}</h2>
-          <p class="desc">{{item.description}}</p>
-          <span class="price">¥ {{item.price}}</span>
+          <h2 class="name">{{item['shoe_info'].name}}</h2>
+          <p class="desc">{{item['shoe_info'].description}}</p>
+          <span class="size">尺码：{{item.shoe_size}}</span>
+          <span class="price">¥ {{item['shoe_info'].price}}</span>
           <section class="update-num">
             <span class="add border-right" @click="handleChangeNum(item.id, -1)">-</span>
-            <b>{{item.buyNum}}</b>
+            <b>{{item.shoe_num}}</b>
             <span class="min border-left" @click="handleChangeNum(item.id, 1)">+</span>
           </section>
         </div>
@@ -26,11 +27,14 @@
 <script>
 import { mapState } from "vuex";
 import BScroll from 'better-scroll';
+import api from "@/api";
+import { Toast } from "vant";
 
 export default {
   name: "CartContents",
   data() {
     return {
+      cart: []
     }
   },
   methods: {
@@ -61,10 +65,19 @@ export default {
     number() {
       return item.buyNum;
     },
-    ...mapState(['cart'])
+    ...mapState(['user'])
   },
   mounted() {
     this.bscrollInit();
+    Toast.loading({ mask: true, duration: 0 });
+    api.getScart(this.user.id).then(({ data }) => {
+      const res = data;
+      if (res.status === 1) {
+        Toast.clear();
+        this.cart = res.data;
+        this.$store.commit('initCart', res.data);
+      }
+    });
   },
   components: {
     BScroll
@@ -86,7 +99,7 @@ export default {
         background: #fff;
         border-radius: 10px;
         box-shadow: 0 2px 20px rgba(0, 0, 0, .1);
-        padding: .1rem .05rem;
+        padding: .1rem .15rem;
         margin-bottom: .08rem;
 
         .img {
@@ -106,13 +119,13 @@ export default {
           position: relative;
           .flex-column();
           .mul-overflow();
+          padding-right: .46rem;
 
           .name {
-            color: rgba(0, 0, 0, .8);
-            font-size: .20rem;
-            line-height: .2rem;
+            color: rgba(0, 0, 0, .7);
+            line-height: .15rem;
             font-weight: 600;
-            margin-bottom: .1rem;
+            margin-bottom: .05rem;
           }
 
           .desc {
@@ -120,6 +133,13 @@ export default {
             white-space: nowrap;
             text-overflow: ellipsis;
             overflow: hidden;
+          }
+
+          .size {
+            font-size: .12rem;
+            line-height: 1;
+            position: absolute;
+            right: 0; top: 0;
           }
 
           .price {

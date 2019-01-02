@@ -30,6 +30,7 @@ import { mapState } from "vuex";
 
 export default {
   name: "OrderAddress",
+  props: ['scart_id'],
   data() {
     return {
       addressSelected: ''
@@ -40,7 +41,12 @@ export default {
       this.$router.push('/user/address/add');
     },
     handleChangeAddress() {
-      this.$router.push('/user/address');
+      this.$router.push({
+        name: "UserAddress",
+        params: {
+          scart_id: this.scart_id
+        }
+      });
     }
   },
   computed: {
@@ -58,6 +64,8 @@ export default {
       if (this.changedAddress) {
         this.addressSelected = this.changedAddress;
       }
+      const address = this.addressSelected;
+      this.$emit('set-address', address);
     }
   }
 }

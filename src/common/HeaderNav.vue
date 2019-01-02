@@ -195,14 +195,13 @@ export default {
 
 <style lang="less" scoped>
   .navigator {
-    width: 100%;
     background: @tColor;
     height: .45rem;
     line-height: .45rem;
     text-align: center;
     color: #fff;
     position: fixed;
-    top: 0; left: 0;
+    top: 0; left: 0; right: 0;
     z-index: 2;
     // box-shadow: 0 4px 10px rgba(0, 0, 0, .3);
 

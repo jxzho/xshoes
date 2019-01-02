@@ -68,7 +68,7 @@
           <van-stepper v-model="shoesSelect.buyNum" />
         </div>
         <div class="address-select"></div>
-        <div class="commit" @click="handleToOrder">确定</div>
+        <div class="commit" @click="handleGoAction">确定</div>
       </aside>
     </transition>
     <footer class="action">
@@ -103,6 +103,7 @@ import BScroll from "better-scroll";
 import HeaderNav from "common/HeaderNav";
 import { mapState, mapGetters } from "vuex";
 import { Toast } from "vant";
+import api from "@/api";
 
 export default {
   name: "Item",
@@ -116,12 +117,13 @@ export default {
       navOptions: {
         title: "SHOES DETAIL"
       },
+      shoe_id: this.$route.params.id,
       shoesSelect: {
-        size: 38,
+        size: 'S',
         buyNum: 0
       },
       shoesSize: [
-        36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46
+        'S', 'M', 'L', 'XL'
       ],
       showInfoSelect: false,
       swiperOption: {
@@ -129,7 +131,9 @@ export default {
         loop: true,
         observer: true,
         observeParents: true
-      }
+      },
+      action: '',
+      isAddCart: false
     }
   },
   methods: {
@@ -174,33 +178,64 @@ export default {
       this.$router.push('/cart');
     },
     handleAddCart() {
-      const item = this.item;
-      this.$store.commit('addToCart', {
-        id: this.$route.params.id,
-        price: item.price,
-        picture: item.picture,
-        name: item.name,
-        description: item.description,
-        buyNum: 1,
-        checked: true,
-        isAdd: 1
-      });
-      Toast.success('添加成功');
+      this.action = '加入购物车';
+      this.showInfoSelect = true;
     },
     handleSizeSelect(e) {
-      const curEle = e.target,
-            buyNum = +curEle.innerText;
-      this.shoesSelect.size = buyNum;
+      const curEle = e.target;
+      this.shoesSelect.size = curEle.innerText;
     },
     handleBuyNow() {
+      this.action = '立即购买';
       this.showInfoSelect = true;
     },
     handleHideSelect() {
       this.showInfoSelect = false;
     },
-    handleToOrder() {
+    handleGoAction() {
+      if (this.action === '立即购买') this.buyNowAction();
+      if (this.action === '加入购物车') this.addToCartAction();
+    },
+    buyNowAction() {
       this.$store.commit('createOrder', this.shoesOrderInfo);
-      this.$router.push('/order');
+      Toast.loading({ mask: true, duration: 0 });
+      api.commitScart({
+        'user_id': this.user.id,
+        'shoe_id': this.item.id,
+        'shoe_size': this.shoesSelect.size,
+        'shoe_num': this.shoesSelect.buyNum,
+        'total_price': this.shoesSelect.buyNum * this.item.price
+      }).then(({ data }) => {
+        Toast.clear();
+        this.$router.push({
+          name: 'Order',
+          params: {
+            'scart_id': + data.data.id
+          }
+        });
+      });
+    },
+    addToCartAction() {
+      const shoe = this.item,
+            data = {
+              'user_id': this.user.id,
+              'shoe_id': this.item.id,
+              'shoe_size': this.shoesSelect.size,
+              'shoe_num': this.shoesSelect.buyNum,
+              'total_price': this.shoesSelect.buyNum * this.item.price
+            };
+      Toast.loading({ mask: true, duration: 0 });
+      api.commitScart(data).then(({ data }) => {
+        const res = data;
+        if (res.status === 1) {
+          Toast.success('添加至购物车成功');
+          this.isAddCart = true;
+          this.showInfoSelect = false;
+          this.$store.commit('addToCartMT', res.data.id);
+        } else {
+          Toast.fail('添加至购物车失败');
+        }
+      });
     }
   },
   computed: {
@@ -211,12 +246,6 @@ export default {
     },
     AddCartText() {
       return this.isAddCart ? "已加入购物车" : "加入购物车"; 
-    },
-    isAddCart() {
-      const cart = this.cart,
-        curId = this.$route.params.id,
-        status = cart.some(item => item.id === curId);
-      return status;
     },
     shoesOrderInfo() {
       return {
@@ -292,6 +321,7 @@ export default {
           .name, .desc {
             color: #000;
             font-size: .22rem;
+            line-height: .22rem;
             padding-bottom: .1rem;
             font-weight: 600;
           }

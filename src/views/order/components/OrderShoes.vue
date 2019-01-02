@@ -1,5 +1,5 @@
 <template>
-  <div class="order-shoes">
+  <div class="order-shoes" v-if="isOrderExsit">
     <div class="picture">
       <img :src="order.picture">
     </div>
@@ -7,6 +7,7 @@
       <div>
         <span class="name">{{order.name}}</span>
         <p class="desc">{{order.description}}</p>
+        <span class="size">size: {{order.size}}</span>
       </div>
       <footer class="price">
         <span>¥ {{order.price}}</span>
@@ -31,7 +32,13 @@ export default {
     }
   },
   computed: {
-    ...mapState(['order'])
+    ...mapState(['order']),
+    isOrderExsit() {
+      if (Object.keys(this.order).length === 0) {
+        return false;
+      }
+      return true;
+    }
   }
 }
 </script>
@@ -73,6 +80,11 @@ export default {
         font-size: .14rem;
         line-height: .15rem;
         .mul-overflow();
+      }
+
+      .size {
+        display: block;
+        margin-top: .08rem;
       }
 
       .price {

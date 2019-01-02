@@ -13,6 +13,7 @@ import HomeBody from "./components/home_body/HomeBody";
 import FooterNav from "common/FooterNav";
 import { mapState } from "vuex";
 import api from "@/api";
+import { Toast } from 'vant';
 
 export default {
   name: "Home",
@@ -37,6 +38,10 @@ export default {
   },
   mounted() {
     this.getShoes();
+    if (location.search) {
+      Toast.success({ message: '支付成功', duration: 2000 });
+      location.href = location.origin;
+    }
   }
 };
 

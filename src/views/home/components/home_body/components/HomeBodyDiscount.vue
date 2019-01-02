@@ -41,13 +41,12 @@ export default {
   .homeBD-discount {
     margin-top: @secOffset;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
 
     .content {
-      width: 1.14rem;
+      width: 32%;
       padding: .18rem 0;
       background: #fff;
-      margin: 0 4px;
       text-align: center;
 
       h2 {

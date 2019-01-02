@@ -22,12 +22,15 @@ export default {
     }
   },
 
-  addToCart(state, shoes) {
-    try {
-      state.cart.push(shoes);
-    } catch (e) {
-      throw new Error("添加至购物车失败: " + e);
-    }
+  initCart(state, cart) {
+    state.cart = cart;
+  },
+
+  // 待删除
+  addToCartMT(state, scart_id) {
+    state.cart.push({
+      scart_id
+    });
   },
 
   updateCart(state, data) {
@@ -64,6 +67,7 @@ export default {
 
   createOrder(state, order) {
     state.order = order;
+    state = { ...state };
   },
 
   updateOrder(state, num) {

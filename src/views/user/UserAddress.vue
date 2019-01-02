@@ -51,7 +51,12 @@ export default {
     handleToOrder(address) {
       if (this.isClickAllow) {
         this.$store.commit('setChangeAddress', address);
-        this.$router.push('/order');
+        this.$router.push({
+          name: "Order",
+          params: {
+            scart_id: this.$route.params.scart_id
+          }
+        });
       }
     }
   },
